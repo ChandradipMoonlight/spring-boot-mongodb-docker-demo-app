@@ -7,30 +7,38 @@ services:
     restart: always
     ports:
       - 27017:27017
-#    environment:
-#      - MONGO-INIT_ROOT_USERNAME=user123
-#      - MONGO-INIT_ROOT_PASSWORD=password123
+    environment:
+      - MONGO-INIT_ROOT_USERNAME=user123
+      - MONGO-INIT_ROOT_PASSWORD=password123
+#      - MONGO_INITDB_DATABASE=admin
     volumes:
       - mongo-data:/data/db
 
   mongo-express:
     image: mongo-express:latest
     container_name: mongo-express
+    restart: always
     ports:
       - 8081:8081
+    depends_on:
+      - mongodb
     links:
       - mongodb
     environment:
-#      - ME_CONFIG_MONGODB_ADMINUSERNAME=user123
-#      - ME_CONFIG_MONGODB_ADMINPASSWORD=password123
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=user123
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password123
       - ME_CONFIG_MONGODB_SERVER=mongodb
+    volumes:
+      - mongo-data:/data/db
 
   spring-boot-mongodb-app:
-    image: moonlight1996/spring-boot-mongodb-app:1.1
+    image: spring-boot-mongodb-app:1.1_auth
     container_name: spring-boot-mongodb-app
     restart: always
     ports:
       - 9090:8080
+    depends_on:
+      - mongodb
     links:
       - mongodb
 
