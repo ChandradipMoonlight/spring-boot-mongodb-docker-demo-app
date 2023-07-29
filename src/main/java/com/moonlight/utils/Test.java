@@ -1,242 +1,74 @@
 package com.moonlight.utils;
 
-import lombok.ToString;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class Test {
-    private static List<Object> getExtraMedicalList(List<HDFCQuestions> hdfcQuestionList) {
-        List<Object> extraMedicalList = new ArrayList<>();
-        List<HDFCQuestions.Options> options = new ArrayList<>();
-        Map<String, Object> idOneObj = new HashMap<>();
-        hdfcQuestionList.forEach(question -> {
-            Map<String, Object> questionMap = new HashMap<>();
-            if (question.getQuestionId().startsWith("HHOS")) {
-                options.add(new HDFCQuestions.Options(question.getQuestionId().replace("HHOS", ""), question.getQuestionText()));
-            } else if (question.getQuestionId().equalsIgnoreCase("1")) {
-                idOneObj.put("QuestionId", question.QuestionId);
-                idOneObj.put("QuestionText", question.getQuestionText());
-            } else {
-                questionMap.put("QuestionId", question.QuestionId);
-                questionMap.put("QuestionText", question.getQuestionText());
-                questionMap.put("Options", question.getOptions());
-                extraMedicalList.add(questionMap);
-            }
-
-        });
-        idOneObj.put("Options", options);
-        extraMedicalList.add(idOneObj);
-        return extraMedicalList;
-    }
-
-    private static List<Object> getExtraMedicalQuestionsListForFamilyFloter(List<HDFCQuestions> hdfcQuestionList){
-        List<Object> extraMedicalList = new ArrayList<>();
-        List<HDFCQuestions.Options> options = new ArrayList<>();
-        Map<String, Object> mapObjectForIdOne = new HashMap<>();
-        hdfcQuestionList.forEach(question -> {
-            Map<String, Object> questionMap = new HashMap<>();
-            if (question.getQuestionId().startsWith("HHOS")) {
-                options.add(new HDFCQuestions.Options(getId(question.getQuestionId().replace("HHOS", ""), 52), question.getQuestionText()));
-            } else if (question.getQuestionId().equalsIgnoreCase("1")) {
-                mapObjectForIdOne.put("QuestionId", getId(question.QuestionId, 13));
-                mapObjectForIdOne.put("QuestionText", question.getQuestionText());
-            } else {
-                questionMap.put("QuestionId", getId(question.QuestionId, 13));
-                questionMap.put("QuestionText", question.getQuestionText());
-                List<HDFCQuestions.Options> optionList = question.Options.stream().map(option -> {
-                    HDFCQuestions.Options options1 = new HDFCQuestions.Options(getId(option.OptionId, 52), option.OptionText);
-                    return options1;
-                }).collect(Collectors.toList());
-                questionMap.put("Options", optionList);
-                extraMedicalList.add(questionMap);
-            }
-        });
-        mapObjectForIdOne.put("Options", options);
-        extraMedicalList.add(mapObjectForIdOne);
-        return extraMedicalList;
-    }
-
-    private static String getId(String strId, Integer incrementedValue) {
-        Integer intId = Integer.valueOf(strId) + incrementedValue;
-        return String.valueOf(intId);
-    }
 
 
     private static String getJsonStr() {
         String jsonStr = "{\n" +
-                "  \"hdfcQuestions\" : [\n" +
-                "  {\n" +
-                "    \"QuestionId\": 3,\n" +
-                "    \"QuestionText\": \"Is the insured member on any regular medication?\",\n" +
-                "    \"Options\": [{\n" +
-                "      \"OptionId\" : \"19\",\n" +
-                "      \"OptionText\" : \"ot_1\"\n" +
-                "    },\n" +
-                "      {\n" +
-                "        \"OptionId\" : \"19\",\n" +
-                "      \"OptionText\" : \"ot_2\"\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS4\",\n" +
-                "    \"QuestionText\": \"Chest Pain/ Heart Attack or any other Heart Disease/ Problem\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS5\",\n" +
-                "    \"QuestionText\": \"Liver or Gall Bladder ailment/Jaundice/Hepatitis B or C\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": 5,\n" +
-                "    \"QuestionText\": \"Is there any hospitalisation history of the insured member?\",\n" +
-                "    \"Options\": [{\n" +
-                "      \"OptionId\" : \"23\",\n" +
-                "      \"OptionText\" : \"ot_1\"\n" +
-                "    },\n" +
-                "      {\n" +
-                "        \"OptionId\" : \"23\",\n" +
-                "      \"OptionText\" : \"ot_2\"\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS6\",\n" +
-                "    \"QuestionText\": \"Kidney ailment or Diseases of Reproductive organs\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS7\",\n" +
-                "    \"QuestionText\": \"Tuberculosis/ Asthma or any other Lung disorder\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS8\",\n" +
-                "    \"QuestionText\": \"Ulcer (Stomach/ Duodenal), or any ailment of Digestive System\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS9\",\n" +
-                "    \"QuestionText\": \"Any Blood disorder (example Anaemia, Haemophilia, Thalassaemia) or any genetic disorder\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": 4,\n" +
-                "    \"QuestionText\": \"Has the insured member undergone any tests or medical investigation?\",\n" +
-                "    \"Options\": [{\n" +
-                "      \"OptionId\" : \"21\",\n" +
-                "      \"OptionText\" : \"ot_1\"\n" +
-                "    },\n" +
-                "      {\n" +
-                "        \"OptionId\" : \"21\",\n" +
-                "      \"OptionText\" : \"ot_2\"\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS15\",\n" +
-                "    \"QuestionText\": \"Arthritis, Spondylitis, Fracture or any other disorder of Muscle Bone/ Joint/ Ligament/ Cartilage\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": 1,\n" +
-                "    \"QuestionText\": \"Does the insured member have any ailment/disability/deformity, due to accident or congenital disease ?\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS16\",\n" +
-                "    \"QuestionText\": \"Any other disease/condition not mentioned above\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": 6,\n" +
-                "    \"QuestionText\": \"Is the insured member expecting a baby/pregnant (only for females)\",\n" +
-                "    \"Options\": [{\n" +
-                "      \"OptionId\" : \"25\",\n" +
-                "      \"OptionText\" : \"ot_1\"\n" +
-                "    },\n" +
-                "      {\n" +
-                "        \"OptionId\" : \"25\",\n" +
-                "      \"OptionText\" : \"ot_2\"\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": 2,\n" +
-                "    \"QuestionText\": \"Is there any surgery planned for the insured member ?\",\n" +
-                "    \"Options\": [{\n" +
-                "      \"OptionId\" : \"17\",\n" +
-                "      \"OptionText\" : \"ot_1\"\n" +
-                "    },\n" +
-                "      {\n" +
-                "        \"OptionId\" : \"17\",\n" +
-                "      \"OptionText\" : \"ot_2\"\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS1\",\n" +
-                "    \"QuestionText\": \"Hypertension/ High blood pressure\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS3\",\n" +
-                "    \"QuestionText\": \"Diabetes/ High blood sugar/Sugar in urine\",\n" +
-                "    \"Options\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"QuestionId\": \"HHOS3\",\n" +
-                "    \"QuestionText\": \"Cancer, Tumour\\n\"}]\n" +
+                "  \"verticalCode\": \"Property\",\n" +
+                "  \"insuranceName\": \"TAGIC\",\n" +
+                "  \"customerName\": \"abc pqr\",\n" +
+                "  \"insurerCode\": \"TATA\",\n" +
+                "  \"planName\": \"ANTYODAYA SHRAMIK SURAKSHA YOJANA\",\n" +
+                "  \"insurerName\": \"TATA\",\n" +
+                "  \"partnerId\": \"5ff55f0706cf200001455fa5\",\n" +
+                "  \"tenantUniqueCode\": \"1069712\",\n" +
+                "  \"uniquePaymentId\": \"AH1HXASB5DS\",\n" +
+                "  \"requestId\": \"AH1HXAQP2QB\",\n" +
+                "  \"totalAmount\": \"499\",\n" +
+                "  \"baseAmount\": \"423\",\n" +
+                "  \"gst\": \"76\",\n" +
+                "  \"broker\": \"ippb\",\n" +
+                "  \"tenant\": \"ippb\",\n" +
+                "  \"autoDebitReqd\": \"true\",\n" +
+                "  \"autoDebitFixedAmount\": \"499\",\n" +
+                "  \"autoDebitStartDate\": \"23-Jul-2024\",\n" +
+                "  \"autoDebitEndDate\": \"22-Jul-2025\"\n" +
                 "}";
         return jsonStr;
     }
-//    public static void main(String[] args) {
-//        MyClass myClass = JsonUtils.jsonStringToJava(getJsonStr(), MyClass.class);
-//        List<Object> extraMedicalList = getExtraMedicalQuestionsListForFamilyFloter(myClass.hdfcQuestions);
-//        System.out.println(JsonUtils.javaListToJsonArray(extraMedicalList));
-        double pi = Math.PI;
-        String para = "India is my country, and I love to my country";
-//        System.out.println(countWords(para));
-//    }
 
-    public static int countWords(String str) {
-        return str.split(" ").length;
+
+
+
+    public static boolean isPerfectNumberByJava8(long dividend) {
+//        return LongStream.rangeClosed(2, number/2)
+//                .filter(num -> number % num == 0)
+//                .sum()==number-1;
+        return LongStream.rangeClosed(2, (long) Math.sqrt(dividend))
+                .reduce(1, (sum, divisor) -> dividend % divisor == 0 ? sum + divisor + dividend/divisor : sum) == dividend;
     }
 
-    public static Map<Character, Integer> getDuplicateCharsAndTheirCount(String str) {
-        Map<Character, Integer> map = new HashMap<>();
-        for (int i =0; i<str.length(); i++) {
-            char key = str.charAt(i);
-            if (map.containsKey(key)) {
-                map.put(key, map.get(key)+1);
-            } else {
-                map.put(key, 1);
+    public static List<Long> getListOfPerfectNumberFrom1ToN(long n) {
+        if (n<6) {
+            return Collections.emptyList();
+        }
+        return LongStream.rangeClosed(6, n)
+                .parallel()
+                .filter(number -> isPerfectNumberByJava8(number))
+                .boxed()
+                .collect(Collectors.toList());
+    }
+
+    public static boolean isPerfectNumberByJava7(long number) {
+        System.out.println("using java 7");
+        boolean check = false;
+        int sum = 1;
+        for (int i=2; i<=number/2; i++) {
+            if (number%i == 0) {
+                sum += i;
             }
         }
-        return map;
+        if (sum == number) {
+            check = true;
+        }
+        return check;
     }
 
-    public static void printResultByJava_7() {
-        String str = "nivruttee";
-        for (Map.Entry<Character, Integer> entry : getDuplicateCharsAndTheirCount(str).entrySet()) {
-            if (entry.getValue()>1) {
-                System.out.println(entry.getKey() + " = " + entry.getValue());
-            }
-        }
-    }
-    public static void printResultByJava_8() {
-        String str = "nivruttee";
-        getDuplicateCharsAndTheirCount(str).forEach((k, v) -> {
-            if (v>1) {
-                System.out.println(k + " = " + v);
-            }
-        });
-    }
 
     public static void main(String[] args) {
 

@@ -1,14 +1,18 @@
 package com.moonlight.utils;
 
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moonlight.collections.Address;
+import com.moonlight.collections.Person;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 public class JsonUtils {
@@ -65,12 +69,5 @@ public class JsonUtils {
         }
         return jsonStr;
     }
-    public static void main(String[] args) {
-        Address address = new Address("add1", "city1", "state1", 123445);
-        List<Address> addressList = new ArrayList<>();
 
-        addressList.add(address);
-        addressList.add(new Address("add2", "city2", "state2", 24465));
-        System.out.println(javaListToJsonArray(Collections.singletonList(addressList)));
-    }
 }
