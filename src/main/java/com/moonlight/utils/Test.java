@@ -1,5 +1,8 @@
 package com.moonlight.utils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import springfox.documentation.spring.web.json.Json;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
@@ -73,5 +76,23 @@ public class Test {
     public static void main(String[] args) {
 
     }
+    private static String extractValue(String jsonString, String key) {
+        String keyWithQuotes = key;
+        int startIndex = jsonString.indexOf(keyWithQuotes) + keyWithQuotes.length() + 1;
+        int endIndex = jsonString.indexOf("}", startIndex + 1);
+        return jsonString.substring(startIndex, endIndex-1);
+    }
 
+    public static void getResponse() {
+        String rowJson = "{\"Errors\":[{\"ErrorCode\":\"BPT33204\",\"ErrorMessage\":\"{\"Data\":{\"TransactionStatus\":{\"IsOverriden\":\"false\",\"ReplyCode\":\"90\",\"SpReturnValue\":\"100\",\"ReplyText\":\" Server Rejected Request. \",\"Memo\":\"\",\"ExternalReferenceNo\":\"9ADjc\",\"IsServiceChargeApplied\":\"false\",\"ExtendedReply\":{\"Messages\":[{\"Code\":{\"Mutable\":false,\"EnumValue\":\"86\",\"Value\":\"86\"},\"Message\":\" Insufficient Balance. \"}]},\"FCYHangeHandlingApplied\":false}}}\"}]}";
+       rowJson = rowJson.replace("\\","");
+//       rowJson = rowJson.replace("\"{","{");
+        rowJson = rowJson.replace("}\"","}");
+        rowJson = rowJson.replace("\"{","{");
+        System.out.println("Response : "+rowJson);
+//        JsonNode jsonNode = JsonUtils.javaToJson(rowJson);
+        JsonNode reponse = JsonUtils.jsonStringToJava(rowJson, JsonNode.class);
+        System.out.println(reponse);
+
+    }
 }
