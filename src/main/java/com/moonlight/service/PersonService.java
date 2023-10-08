@@ -10,7 +10,9 @@ import com.moonlight.utils.AppUtils;
 import com.moonlight.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.Optional;
 @Slf4j
 public class PersonService implements IPersonService{
 
+    @Autowired
+    private ReactiveWebClient reactiveWebClient;
     @Autowired
     private PersonRepo personRepo;
     @Override
@@ -146,5 +150,9 @@ public class PersonService implements IPersonService{
                 .max((id1, id2) -> id1.compareTo(id2))
                 .orElse(0);
         return id = id +1;
+    }
+
+    public PersonResponse getDummyRes() {
+        return reactiveWebClient.getMono("", PersonResponse.class, new HttpHeaders()).block();
     }
 }

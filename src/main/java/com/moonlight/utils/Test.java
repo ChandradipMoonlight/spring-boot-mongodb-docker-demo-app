@@ -1,12 +1,15 @@
 package com.moonlight.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import springfox.documentation.spring.web.json.Json;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
+@Slf4j
 public class Test {
 
 
@@ -74,7 +77,7 @@ public class Test {
 
 
     public static void main(String[] args) {
-
+        print().subscribe();
     }
     private static String extractValue(String jsonString, String key) {
         String keyWithQuotes = key;
@@ -93,6 +96,19 @@ public class Test {
 //        JsonNode jsonNode = JsonUtils.javaToJson(rowJson);
         JsonNode reponse = JsonUtils.jsonStringToJava(rowJson, JsonNode.class);
         System.out.println(reponse);
+
+    }
+
+    public static Flux<String> getData() {
+        return Flux.just("Dipak", "swapnil");
+    }
+
+    public static Flux<Integer> print() {
+        Flux<Integer> lengths = getData().map(data -> {
+           log.info("data : {}", data);
+            return data.length();
+        });
+        return lengths;
 
     }
 }
